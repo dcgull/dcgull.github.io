@@ -8,8 +8,8 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Trace Downstream</title>
 
-    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
-	<link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.8/js/esri/css/esri.css">
+	<link rel="stylesheet" href="https://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
 	
     <style>
       html, body, #mapDiv {
@@ -33,7 +33,7 @@
       }
     </style>
 
-    <script src="http://js.arcgis.com/3.8/"></script>
+    <script src="https://js.arcgis.com/3.8/"></script>
     <script>
     require(["dojo/dom",
               "dojo/_base/Color",
@@ -59,12 +59,12 @@
               zoom: 4
             });
 
-            var basemap = new ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer");		   				   
-			var overlay = new ArcGISTiledMapServiceLayer("http://hydrology.esri.com/arcgis/rest/services/WorldHydroReferenceOverlay/MapServer"); 				   
+            var basemap = new ArcGISTiledMapServiceLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer");		   				   
+			var overlay = new ArcGISTiledMapServiceLayer("https://hydrology.esri.com/arcgis/rest/services/WorldHydroReferenceOverlay/MapServer"); 				   
 			map.addLayers([basemap, overlay])
 			
 	//Add Downsteram Trace Geoprocessing Function
-			gp = new Geoprocessor("http://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer/TraceDownstream");
+			gp = new Geoprocessor("https://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer/TraceDownstream");
 			gp.setOutputSpatialReference({wkid: 102100});
 			map.on("click", Trace);
 
@@ -118,7 +118,7 @@
     <div id="mapDiv"></div>
     <div id="info" class="esriSimpleSlider">
       Click on map to execute Trace Downstream. <br>
-	  <a href="http://www.arcgis.com/home/item.html?id=5314c23c24484c68ac961f8772be813b" target="Ref">More...</a>
+	  <a href="https://www.arcgis.com/home/item.html?id=5314c23c24484c68ac961f8772be813b" target="Ref">More...</a>
     </div>
   </body>
 </html>
