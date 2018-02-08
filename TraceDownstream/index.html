@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=7, IE=9, IE=10">
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Trace Downstream</title>
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
+	<link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+	
+    <style>
+      html, body, #mapDiv {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+      #info {
+        bottom: 20px;
+        color: #444;
+        height: auto;
+        font-family: arial;
+        left: 20px;
+        margin: 5px;
+        padding: 10px;
+        position: absolute;
+        text-align: left;
+        width: 200px;
+        z-index: 40;
+      }
+    </style>
+
+    <script src="http://js.arcgis.com/3.8/"></script>
+    <script>
+    require(["dojo/dom",
+              "dojo/_base/Color",
+              
+              "esri/map",
+              "esri/graphic",
+              "esri/tasks/Geoprocessor",
+              "esri/tasks/FeatureSet",
+			  "esri/layers/ArcGISTiledMapServiceLayer",
+			  "esri/symbols/SimpleMarkerSymbol",
+			  "esri/symbols/CartographicLineSymbol",
+			  "esri/IdentityManager"
+              ],
+        function(dom, Color, Map, Graphic, Geoprocessor, FeatureSet, ArcGISTiledMapServiceLayer, SimpleMarkerSymbol, CartographicLineSymbol){
+
+          var map, gp;
+
+          
+	//Initialize Map
+            map = new Map("mapDiv", {
+			  //basemap: "topo",
+              center: [20.6, 0],
+              zoom: 4
+            });
+
+            var basemap = new ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer");		   				   
+			var overlay = new ArcGISTiledMapServiceLayer("http://hydrology.esri.com/arcgis/rest/services/WorldHydroReferenceOverlay/MapServer"); 				   
+			map.addLayers([basemap, overlay])
+			
+	//Add Downsteram Trace Geoprocessing Function
+			gp = new Geoprocessor("http://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer/TraceDownstream");
+			gp.setOutputSpatialReference({wkid: 102100});
+			map.on("click", Trace);
+
+          function Trace(evt) {
+			var pointSymbol = new SimpleMarkerSymbol();
+			pointSymbol.setStyle(SimpleMarkerSymbol.STYLE_CROSS)
+            /pointSymbol.setSize("13");
+            var graphic = new Graphic(evt.mapPoint, pointSymbol);
+            map.graphics.add(graphic);
+
+            var features = [];
+            features.push(graphic);
+            var featureSet = new FeatureSet();
+            featureSet.features = features;
+           
+            var params = {
+              "InputPoints": featureSet,
+			  "SourceDatabase": "FINEST",
+			  "Generalize": "True"
+            };
+            gp.submitJob(params, Callback, null, function(error){
+			console.log("error", error, params);
+		    window.alert("Sorry, we do not have data for this region at your requested resolution");	
+			}
+			);
+			}
+		  
+		  function Callback(jobInfo){
+			gp.getResultData(jobInfo.jobId, "OutputTraceLine", drawTrace);	
+		  }
+
+		  function drawTrace(results) {
+			var traceLine = new CartographicLineSymbol(CartographicLineSymbol.STYLE_SOLID, new Color([0,0,255,1]), 5);
+			traceLine.setCap(CartographicLineSymbol.CAP_ROUND);
+			traceLine.setJoin(CartographicLineSymbol.JOIN_ROUND);
+			
+			console.log(results);
+			var features = results.value.features;
+			for (var f=0, fl=features.length; f<fl; f++) {
+				var feature = features[f];
+				feature.setSymbol(traceLine);
+				map.graphics.add(feature);
+		   }
+           }
+		  
+    });
+    </script>
+
+  </head>
+  <body class="claro">
+    <div id="mapDiv"></div>
+    <div id="info" class="esriSimpleSlider">
+      Click on map to execute Trace Downstream. <br>
+	  <a href="http://www.arcgis.com/home/item.html?id=5314c23c24484c68ac961f8772be813b" target="Ref">More...</a>
+    </div>
+  </body>
+</html>
