@@ -8,8 +8,8 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Watershed Delineation</title>
 
-    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
-	<link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.8/js/esri/css/esri.css">
+	<link rel="stylesheet" href="https://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
 	
     <style>
       html, body, #mapDiv {
@@ -33,7 +33,7 @@
       }
     </style>
 
-    <script src="http://js.arcgis.com/3.8/"></script>
+    <script src="https://js.arcgis.com/3.8/"></script>
     <script>
     require(["dojo/dom",
               "dojo/_base/Color",
@@ -61,7 +61,7 @@
               zoom: 4
             });
 
-            var basemap = new ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer");		   				   
+            var basemap = new ArcGISTiledMapServiceLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer");		   				   
 			var overlay = new ArcGISTiledMapServiceLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Esri_Hydro_Reference_Overlay/MapServer"); 				   
 			var tempPoint = new GraphicsLayer();
 			var watersheds = new GraphicsLayer();
@@ -83,7 +83,7 @@
 			polySymbol.setOutline(outline);
 			
 	//Add Watershed Delineation Geoprocessing Function
-			gp = new Geoprocessor("http://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer/Watershed");
+			gp = new Geoprocessor("https://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer/Watershed");
 			gp.setOutSpatialReference({wkid: 102100});
 			map.on("click", computeWatershed);
 
@@ -143,7 +143,7 @@
     <div id="mapDiv"></div>
     <div id="info" class="esriSimpleSlider">
       Click on a stream to delineate its watershed. <br>
-	  <a href="http://www.arcgis.com/home/item.html?id=8e48f6209d5c4be98ebbf90502f41077" target="Ref">More...</a>
+	  <a href="https://www.arcgis.com/home/item.html?id=8e48f6209d5c4be98ebbf90502f41077" target="Ref">More...</a>
     </div>
   </body>
 </html>
